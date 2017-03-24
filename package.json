@@ -1,0 +1,20 @@
+{
+  "name": "tank-x",
+  "version": "0.0.1",
+  "description": "A online 8-bit tank game",
+  "main": "server.js",
+  "repository": "",
+  "author": "Li Luo <luolisave@gmail.com>",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-rename": "^1.2.2",
+    "run-sequence": "^1.2.2"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2"
+  }
+}

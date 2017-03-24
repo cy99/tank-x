@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+		<title>Space-Z Class Tester</title>
+	</head>
+
+	<body>  
+		<p>See console for test result.</p>
+		<script src="js/class/accelerator.class.js"></script>
+		<script src="js/class/score.class.js"></script>
+		<script src="js/class/player.class.js"></script>
+		
+		<script type="text/javascript" >
+		/*
+			//这个是用来取代Score的
+			var score = new ScoreClass([1,2,3,4,5,6,7,8,9]);
+			score.startScore(1); //1 is level 1, means increase score by 1 per second
+			//player.startScore(1);
+			//player.setLevel(1);
+			
+			//算加速度的类
+			var acc = new AcceleratorClass(1);
+			var distance = acc.getDistance(-2,2, -5, -6);
+			console.log(distance);
+		//*/
+			
+			
+			var player = new PlayerClass(1,[1,2,3,4,5,6,7,8,9]);
+			player.score.startScore(1);
+			player.startTicker();
+			
+		</script>
+	</body>
+</html>

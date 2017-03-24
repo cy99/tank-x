@@ -1,0 +1,7 @@
+﻿node_modules/
+app/bower_components/
+app/uploads/*
+bower_components/
+.idea/
+app/index.html
+app/api.json
