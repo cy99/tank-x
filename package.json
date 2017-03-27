@@ -10,7 +10,8 @@
     "express": "^4.15.2",
     "gulp-nodemon": "^2.2.1",
     "gulp-rename": "^1.2.2",
-    "run-sequence": "^1.2.2"
+    "run-sequence": "^1.2.2",
+    "socket.io": "^1.7.3"
   },
   "devDependencies": {
     "browser-sync": "^2.18.8",

@@ -11,20 +11,27 @@ var StateTitle = {
   		
   		//Load Game Play Resources
       this.load.bitmapFont('eightbitwonder', 'assets/fonts/eightbitwonder.png', 'assets/fonts/eightbitwonder.fnt');
-      //this.load.bitmapFont('font', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
-      this.load.image('blackBG', 'assets/images/BlackBG.png');
+      this.load.bitmapFont('font', 'assets/fonts/font.png', 'assets/fonts/font.fnt');
+      // this.load.image('blackBG', 'assets/images/BlackBG.png');
       this.load.spritesheet('sPlayer', 'assets/images/sprite/rsz_buzz.png');
-      this.load.spritesheet('rock', 'assets/images/sprite/small_rock.png');
-      this.load.spritesheet('oxgen', 'assets/images/sprite/oxgentank.png');
-      this.game.load.image('starfield', 'assets/images/sprite/starfield.png');
-      this.game.load.image('background', 'assets/images/sprite/background2.png');
-      this.game.load.image('arrow', 'assets/images/sprite/longarrow2.png');
+      // this.load.spritesheet('rock', 'assets/images/sprite/small_rock.png');
+      // this.load.spritesheet('oxgen', 'assets/images/sprite/oxgentank.png');
+      // this.game.load.image('starfield', 'assets/images/sprite/starfield.png');
+      // this.game.load.image('background', 'assets/images/sprite/background2.png');
+      // this.game.load.image('arrow', 'assets/images/sprite/longarrow2.png');
       
       //  Load Sound
-      this.load.audio('audio_explosion', 'assets/sounds/explosion.mp3');
-      this.load.audio('audio_ding', 'assets/sounds/ding.mp3');
+      // this.load.audio('audio_explosion', 'assets/sounds/explosion.mp3');
+      // this.load.audio('audio_ding', 'assets/sounds/ding.mp3');
       this.load.audio('audio_bgm', 'assets/sounds/bgm.mp3');
-      this.load.audio('audio_hurt', 'assets/sounds/hurt.mp3');
+      // this.load.audio('audio_hurt', 'assets/sounds/hurt.mp3');
+      
+      
+      
+      // for tank-x
+      this.load.tilemap('level1', 'assets/tiled/level1.json', null, Phaser.Tilemap.TILED_JSON);
+      this.load.image('gameTiles', 'assets/tiled/battle_city.png');
+      
       
   },
   
@@ -61,8 +68,8 @@ var StateTitle = {
   
   startGame: function (pointer) {
     if(this.ready){
-      // TODO: get resource ready, then turn on this.
 	    // this.state.start('StateGamePlay');
+	    this.state.start('StateTankPlay');
     }
 	}
 };

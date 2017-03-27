@@ -11,5 +11,6 @@ var game = new Phaser.Game(GAME_WIDTH, GAME_HEIGHT, Phaser.AUTO, 'container');
 game.state.add('StateBoot',   StateBoot);
 game.state.add('StateTitle',  StateTitle);
 game.state.add('StateGamePlay',  StateGamePlay);
+game.state.add('StateTankPlay',  StateTankPlay);
 game.state.add('StateGameOver',  StateGameOver);
 game.state.start('StateBoot');
