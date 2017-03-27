@@ -28,7 +28,7 @@ var StateTankPlay = {
    *  Create 
   */
   create: function() {
-    this.physics.startSystem(Phaser.Physics.ARCADE); // <<------------------------------------
+    this.physics.startSystem(Phaser.Physics.ARCADE); // <<------------------------------------  Collision detection
     
     //enable input
     this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -49,11 +49,11 @@ var StateTankPlay = {
     this.blockedLayer = this.map.createLayer('blockedLayer');
  
     //collision on blockedLayer
-    this.map.setCollisionBetween(1, 400, true, 'blockedLayer');   // <<------------------------------------
+    this.map.setCollisionBetween(1, 400, true, 'blockedLayer');   // <<------------------------------------ Collision detection
     
     //resizes the game world to match the layer dimensions
     this.backgroundlayer.resizeWorld();
-    this.blockedLayer.resizeWorld();    // <<------------------------------------
+    this.blockedLayer.resizeWorld();    // <<------------------------------------  Collision detection
     
     
 
@@ -71,10 +71,10 @@ var StateTankPlay = {
     
     
     
-    this.physics.enable(this.tank1);            // <<------------------------------------
-    this.tank1.body.bounce.y = 0;               // <<------------------------------------
-    this.tank1.body.linearDamping = 16;         // <<------------------------------------
-    this.tank1.body.collideWorldBounds = true;  // <<------------------------------------
+    this.physics.enable(this.tank1);            // <<------------------------------------  Collision detection for tank1
+    this.tank1.body.bounce.y = 0;               // <<------------------------------------  Collision detection for tank1
+    this.tank1.body.linearDamping = 16;         // <<------------------------------------  Collision detection for tank1
+    this.tank1.body.collideWorldBounds = true;  // <<------------------------------------  Collision detection for tank1
     
     
     

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Test socket.io page</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+		<link rel="icon" type="image/gif" href="favicon.ico" />
+		
+		
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.min.js"></script>
+		<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+		
+		<style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font: 13px Helvetica, Arial; }
+            form { background: #BBB; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+            form label { border: 0; padding: 10px; width: 8%; margin-right: .5%; }
+            form #cmd { border: 0; padding: 10px; width: 15%; margin-right: .5%; }
+            form #m { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+            form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+            div {padding:5px;}
+            #messages { list-style-type: none; margin: 0; padding: 0; }
+            #messages li { padding: 5px 10px; }
+            #messages li:nth-child(odd) { background: #eee; }
+        </style>
+	</head>
+
+	<body>  
+		<ul id="messages"></ul>
+        <form action="">
+          <div>
+              <label for="cmd" style="background-color:#BBB;">Command to send: </label>
+              <input id="cmd" name="cmd" value="echo" />
+              <select id="cmd-select" name="cmd-select" style="font-size:large; padding:6px;">
+                  
+                  <option value="echo">echo</option>
+                  <option value="test">test</option>
+                  <option value="reset">reset</option>
+                  <option value="first login">first login</option>
+                  <option value="input">input</option>
+                  
+              </select>
+          </div>
+          <div style="height:250px">
+              <!--<input id="m" autocomplete="off" />-->
+              <textarea id="m" style=" height: 237px;"></textarea>
+              <button >Send</button>
+          </div>
+        </form>
+        
+        <script type="text/javascript">
+            $(function () {
+                var socket = io();
+                
+                $('form').submit(function(){
+                    var myInput = $('#m').val();
+                    
+                    
+                    if($('#cmd-select').val() =="input"){
+                        myInput = {"key_down":{"up":true}};
+                    }
+                    
+                    socket.emit($("#cmd").val(), myInput);
+                    $('#m').val('');
+                    return false;
+                });
+                
+                $('#cmd-select').change(function(){
+                    $('#cmd').val($('#cmd-select').val());
+                });
+                
+                socket.on('echo', function(msg){
+                  $('#messages').append($('<li>').text(msg));
+                });
+            });
+        </script>
+	</body>
+</html>
