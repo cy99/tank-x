@@ -288,4 +288,4 @@ setInterval(function() {
   };
   io.emit("updates", updateData);
   
-}, 1000 );//TODO: should < 50ms
+}, Math.floor(1000/FPS) );//

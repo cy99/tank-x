@@ -84,9 +84,15 @@ var StateTankPlay = {
     // socket.io =================================================================
     console.log("test socket.io, socket = ", socket);
     //var socket = io();
-    socket.emit('test', 'test-data');
-    socket.emit('echo', 'abc');
-    socket.on('echo', function (data) {
+    // socket.emit('test', 'test-data');
+    // socket.emit('echo', 'abc');
+    // socket.on('echo', function (data) {
+    //     console.log("data echo back from server: data = (", data, ")");
+    // });
+    
+    
+    socket.emit('first login', 'abc');
+    socket.on('update', function (data) {
         console.log("data echo back from server: data = (", data, ")");
     });
     
