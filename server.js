@@ -85,7 +85,7 @@ function clone(obj) {
 
 
 // tanks=====================================================================================
-const FPS = 20;
+const FPS = 30;
 const MAX_PLAYER_NUMBER = 8;
 
 var players = [];
@@ -159,13 +159,18 @@ io.on('connection', function (socket) {
         
         if(players.length < MAX_PLAYER_NUMBER){
             var isPlayerAlreadyLogin = false;
+            var playerLoginNum = undefined;
+            
+            playerLoginNum = players.length;
             for(var i = 0; i<MAX_PLAYER_NUMBER; i++){
                 if(players && players[i] && players[i].socketId == socket.id){
+                    playerLoginNum = i;
+                    console.log("same socket id detedted, player login already!", players[i].socketId, " == ", socket.id, "");
                     isPlayerAlreadyLogin = true;
                 }
             }
             
-            console.log("isPlayerAlreadyLogin = ", isPlayerAlreadyLogin);
+            console.log("isPlayerAlreadyLogin = ", isPlayerAlreadyLogin, ". Now login player #", playerLoginNum);
             
             if(!isPlayerAlreadyLogin){
                 var playerNum = players.length + 1;
@@ -176,7 +181,7 @@ io.on('connection', function (socket) {
                 player.num = playerNum;
                 player.socketId = socket.id;
                 player.tank.name="P"+playerNum;
-                player.tank.speed=0.1;
+                player.tank.speed=0.05;
                 if(playerNum == 1){
                     player.tank.position.x = 24,
                     player.tank.position.y = 24
@@ -225,7 +230,39 @@ io.on('connection', function (socket) {
     socket.on('input', function (data) {
         if(socket.player){
             socket.player.input = data;
-            console.log("socket.player.input = ",socket.player.input);
+            /////console.log("socket.player.input = ",socket.player.input); //, " player = ", socket.player
+            
+            
+            var tankSpeed = 0.05;
+            if(socket.player.tank.speed){
+                tankSpeed = socket.player.tank.speed;
+            }
+            if(socket && socket.player && socket.player.input){
+                if(socket.player.input.key_down == "left"){
+                    socket.player.tank.position.x -= tankSpeed;
+                }else if(socket.player.input.key_down == "right"){
+                    socket.player.tank.position.x += tankSpeed;
+                }else if(socket.player.input.key_down == "up"){
+                    socket.player.tank.position.y -= tankSpeed;
+                }else if(socket.player.input.key_down == "down"){
+                    socket.player.tank.position.y += tankSpeed;
+                }
+                
+                
+                if(socket.player.tank.position.x < 24){
+                    socket.player.tank.position.x = 24;
+                }else if(socket.player.tank.position.x > 827){
+                    socket.player.tank.position.x = 827;
+                }else if(socket.player.tank.position.y < 24){
+                    socket.player.tank.position.y = 24;
+                }else if(socket.player.tank.position.y > 520){
+                    socket.player.tank.position.y = 520;
+                }
+            }
+            
+            
+            
+            
         }else{
             //error: please 'login first'
             console.log("error: please 'login first'");
@@ -239,7 +276,7 @@ io.on('connection', function (socket) {
 
     
 setInterval(function() {
-    
+    /////console.log("interval");
 //   for(var i=0; i<allClients.length; i++){
 //       if(allClients[i].player){
 //           //单发给指定socket
@@ -275,6 +312,12 @@ setInterval(function() {
             }
             
             /////console.log("playerTank", playerTank);
+            
+            //record previous key down for this player
+            if(playerInput.key_down && ( playerInput.key_down.up ||  playerInput.key_down.down ||  playerInput.key_down.left ||  playerInput.key_down.right)){
+                playerInput.previousKeyDown = clone(playerInput.key_down);
+            }
+            
             
             playerInput.key_down = {};
             
