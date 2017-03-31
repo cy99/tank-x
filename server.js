@@ -5,21 +5,11 @@ var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
 
 
-
 // System wide config
 app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' })); // parse application/x-www-form-urlencoded
 app.use(bodyParser.json({limit: '50mb'}));// parse application/json
 app.use('/', express.static(__dirname + '/app'));
 
-
-
-// CMS Global Constant
-LI_ROOT_DIR = __dirname;
-SESSION_TIMEOUT_SECONDS = 3600;
-
-// CMS Global Route
-// var route = require('./server/route');
-// route.config(express, app, upload);
 
 //get absolute uncaught Exceptions here
 process.on('uncaughtException', function(err) {
@@ -37,15 +27,16 @@ app.use(function(err, req, res, next) {
 });
 
 
-
-
 var portNumber = 8080;
-// app.listen(portNumber, function () {
-//     console.log(`App listening on port ${portNumber}!`);
-// });
+/*
+app.listen(portNumber, function () {
+    console.log(`App listening on port ${portNumber}!`);
+});
+//*/
 http.listen(portNumber, function () {
     console.log(`App with socket.io listening on port ${portNumber}!`);
 });
+
 
 
 // general functions ===========================================================
@@ -106,23 +97,23 @@ var tankModel = {
 
 
 //Socket IO
-var allClients = [];
+var allClientSockets = [];
 io.on('connection', function (socket) {
-    allClients.push(socket);
+    allClientSockets.push(socket);
     
     socket.on('disconnect', function(){
         console.log('user disconnected');
         
-        var i = allClients.indexOf(socket);
-        allClients.splice(i, 1);
+        var i = allClientSockets.indexOf(socket);
+        allClientSockets.splice(i, 1);
         
         for(var i = 0; i<MAX_PLAYER_NUMBER; i++){
             if(players[i] && players[i].socketId == socket.id){
+                /////console.log("before remove disconnected player. players = ", players);
                 players.splice(i, 1);
-                console.log("players = ", players)
+                /////console.log("after remove disconnected player. players = ", players);
             }
         }
-        //TODO: delete player from players array
     });
       
     socket.on('test', function (msg) {
@@ -135,21 +126,14 @@ io.on('connection', function (socket) {
         console.log("echo command from client. data = ", data);
         io.emit('echo', data); //broadcast
     });
-
-    // socket.on('cmd', function (msg) {
-    //     if (msg == 'clear') {
-    //         console.log('Server side catch cleared.');
-    //     }
-    //     console.log("cmd. socket.id = ", socket.id, "msg = ", msg);
-    // });
     
     socket.on('reset', function (data) {
         players = [];
         console.log("server soft reset.");
         io.emit('reset', "server soft reset."); //broadcast
         
-        for(var i =0; i< allClients.length; i++){
-            allClients[i].disconnect(true);
+        for(var i =0; i< allClientSockets.length; i++){
+            allClientSockets[i].disconnect(true);
         }
         
     });
@@ -237,6 +221,8 @@ io.on('connection', function (socket) {
             if(socket.player.tank.speed){
                 tankSpeed = socket.player.tank.speed;
             }
+            
+            // tank move
             if(socket && socket.player && socket.player.input){
                 if(socket.player.input.key_down == "left"){
                     socket.player.tank.position.x -= tankSpeed;
@@ -247,7 +233,6 @@ io.on('connection', function (socket) {
                 }else if(socket.player.input.key_down == "down"){
                     socket.player.tank.position.y += tankSpeed;
                 }
-                
                 
                 if(socket.player.tank.position.x < 24){
                     socket.player.tank.position.x = 24;
@@ -260,8 +245,13 @@ io.on('connection', function (socket) {
                 }
             }
             
-            
-            
+            // tank fire
+            if(socket && socket.player && socket.player.input){
+                if(socket.player.input.key_down == "space"){
+                    //TODO: fire. add bullet to bullets pool.
+                    
+                }
+            }
             
         }else{
             //error: please 'login first'
@@ -274,30 +264,19 @@ io.on('connection', function (socket) {
 
     
 
-    
+//process game logic here.
 setInterval(function() {
-    /////console.log("interval");
-//   for(var i=0; i<allClients.length; i++){
-//       if(allClients[i].player){
-//           //单发给指定socket
-//           //io.sockets.connected[allClients[i].id].emit('player update'  , allClients[i].player);
-//           //console.log('player update'  , allClients[i].player);
-//       }
-//   }
-  
-  //TODO: process game logic here
-    for(var i=0; i<allClients.length; i++){
-        if(allClients[i].player && allClients[i].player.input){
+    // 
+    for(var i=0; i<allClientSockets.length; i++){
+        if(allClientSockets[i].player && allClientSockets[i].player.input){
             var playerInput;
             var playerTank;
-            var distanceDelta = allClients[i].player.tank.speed * FPS;
-            playerInput = allClients[i].player.input;
-            playerTank = allClients[i].player.tank;
-            
+            var distanceDelta = allClientSockets[i].player.tank.speed * FPS;
+            playerInput = allClientSockets[i].player.input;
+            playerTank = allClientSockets[i].player.tank;
             
             /////console.log("playerInput",playerInput);
             /////console.log("playerTank", playerTank);
-            
             if(playerInput.key_down && playerInput.key_down.up){
                 playerTank.position.y -= distanceDelta;
             }else if(playerInput.key_down && playerInput.key_down.down){
@@ -311,24 +290,21 @@ setInterval(function() {
                 
             }
             
-            /////console.log("playerTank", playerTank);
-            
             //record previous key down for this player
             if(playerInput.key_down && ( playerInput.key_down.up ||  playerInput.key_down.down ||  playerInput.key_down.left ||  playerInput.key_down.right)){
                 playerInput.previousKeyDown = clone(playerInput.key_down);
             }
-            
             
             playerInput.key_down = {};
             
         }
     }
   
-  //群发给每个player (不是每一个socket，这样节省带宽)
+  //emit to every connected players.
   var updateData = {
       time: Math.floor(Date.now()),
       players:players
   };
   io.emit("updates", updateData);
   
-}, Math.floor(1000/FPS) );//
+}, Math.floor(1000/FPS) );

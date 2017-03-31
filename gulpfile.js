@@ -5,7 +5,6 @@
 var gulp = require('gulp');
 var exec = require('child_process').exec;
 var nodemon = require('gulp-nodemon'); // execute command like 'node server.js' in this case
-var browserSync = require('browser-sync').create();
 
 var runSequence = require('run-sequence');
 var rename = require("gulp-rename");
@@ -31,13 +30,11 @@ gulp.task('serve-dev',['build-dev'], function (cb) {
         script: 'server.js'
     }).on('start', function () {
         // to avoid nodemon being started multiple times
-        // thanks @matthisk
         if (!started) {
             cb();
             started = true;
         }
     });
-    // note: use ignore **/* to disable nodemon watch function, this will allow browser-sync do proxy without break.
 });
 // default ends ===================================================================================================
 
