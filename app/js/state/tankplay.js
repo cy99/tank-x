@@ -116,8 +116,14 @@ var StateTankPlay = {
     
     
     socket.emit('first login', 'abc');
+    
+    socket.on('disconnect', function () {
+        console.log('disconnect client event....');
+        self.state.start('StateConnectionError');
+    });
+    
     socket.on('updates', function (data) {
-        console.log("update event send back from server: data = (", data, ")");
+        /////console.log("update event send back from server: data = (", data, ")");
         //console.log("update event send back from server: data.players = (", data.players, ")");
         
         for(var i = 0; i<data.players.length; i++){

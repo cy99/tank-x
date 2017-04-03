@@ -13,4 +13,5 @@ game.state.add('StateTitle',  StateTitle);
 game.state.add('StateGamePlay',  StateGamePlay);
 game.state.add('StateTankPlay',  StateTankPlay);
 game.state.add('StateGameOver',  StateGameOver);
+game.state.add('StateConnectionError',  StateConnectionError);
 game.state.start('StateBoot');
